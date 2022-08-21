@@ -5,15 +5,14 @@ int n; int k;
 int mejorS = 0;
 vector<int> mejorI;
 
-int suma(vector<vector<int>> M, vector<int> I, int i = 0) {
-    if (i > I.size()) {
-        return 0;
-    } else {
-        int sin = suma(M, I, i+1);
-        I.push_back(i);
-        int con = suma(M, I, i+1);
-        return sin + con;
+int suma(vector<vector<int>> M, vector<int> I) {
+    int s = 0;
+    for (int i = 0; i < I.size(); ++i) {
+        for (int j = i; j < I.size(); ++j) {
+            s += M[i][j];
+        }
     }
+    return s;
 }
 
 void BT(vector<vector<int>> M, vector<int> I, int i = 0) {
@@ -43,5 +42,9 @@ int main () {
         }
     }
     BT(M, {});
+    cout << mejorS << endl;
+    for (int i = 0; i < mejorI.size(); ++i) {
+        cout << mejorI[i] + 1 << ", ";
+    }
     return 0;
 }
