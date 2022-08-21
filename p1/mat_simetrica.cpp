@@ -5,28 +5,23 @@ int n; int k;
 int mejorS = 0;
 vector<int> mejorI;
 
-int suma(vector<vector<int>> M, vector<int> I) {
+int sumarUlt(vector<vector<int>> M, vector<int> I) {
     int s = 0;
-    for (int i = 0; i < I.size(); ++i) {
-        for (int j = i; j < I.size(); ++j) {
-            s += M[i][j];
-        }
+    for (int i = 0; i < I.size() - 1; ++i) {
+        s += M[i][I[I.size() - 1]];
     }
     return s;
 }
 
-void BT(vector<vector<int>> M, vector<int> I, int i = 0) {
-    if (I.size() == k) {
-        int s = suma(M, I);
-        if (s >= mejorS) {
-            mejorI = I;
-            mejorS = s;
-        }
+void BT(vector<vector<int>> M, vector<int> I, int i = 0, int s = 0) {
+    if (I.size() == k && s >= mejorS) {
+        mejorI = I;
+        mejorS = s;
     } else if (I.size() < k) {
         for (int j = i; j < n; ++j) {
-            BT(M, I, j + 1);
+            BT(M, I, j + 1, s);
             I.push_back(j);
-            BT(M, I, j + 1);
+            BT(M, I, j + 1, s + sumarUlt(M, I));
         }
     }
 }
