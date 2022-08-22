@@ -26,6 +26,18 @@ void BT(vector<vector<int>> M, vector<int> I, int i = 0, int s = 0) {
     }
 }
 
+void BUDP(vector<vector<int>> M, vector<int> I) {
+    int s[k]{};
+    for (int i = 0; i < k; i++) {
+        for (int j = i; j < n; j++) {
+            I.push_back(j);
+            mejorS = max(mejorS, s[i] + sumarUlt(M, I)); //memoizar I parciales
+            I.pop_back();
+        }
+        s[i] = mejorS;
+    }
+}
+
 int main () {
     cin >> n;
     cin >> k;
@@ -36,7 +48,7 @@ int main () {
             cin >> M[i][j];
         }
     }
-    BT(M, {});
+    BUDP(M, {});
     cout << mejorS << endl;
     for (int i = 0; i < mejorI.size(); ++i) {
         cout << mejorI[i] + 1 << ", ";
