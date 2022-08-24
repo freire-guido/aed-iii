@@ -18,11 +18,11 @@ void BT(const matrix<int>& M, vector<int> I, int s = 0) {
     }
     else if (I.size() < n) {
         I.push_back(I.size());
+        BT(M, I, s - M[I.size() - 2][0] + M[I.size() - 2][I.size() - 1] + M[I.size() - 1][0]);
         for (int i = I.size() - 1; i > 2; --i) {
-            BT(M, I, s - M[i-1][i+1] + M[i-1][i] + M[i][(i + 1) % I.size()]);
             atrasar(I, i);
+            BT(M, I, s - M[i-1][(i + 1) % I.size()] + M[i-1][i] + M[i][(i + 1) % I.size()]);
         }
-        BT(M, I, s + M[0][1] + M[1][2 % I.size()]);
     }
 }
 
