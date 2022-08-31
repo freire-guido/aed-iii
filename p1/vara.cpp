@@ -7,9 +7,10 @@ vector<int> C;
 vector<int> L; // [0, 2, 4, 7, 10]
 
 int DP(int i, int j, matrix<int>& M) {
+    cout << "DP(" << i << ", " << j << ")" << endl;
     if (M[i][j] == 1e9) {
         for (int k = i; k < j; ++k) {
-            M[i][j] = min(M[i][j], DP(i, k, M) + DP(k+1, j, M) + L[j] - L[i]);
+            M[i][j] = min(M[i][j], DP(i, k, M) + DP(k+1, j, M) + L[j] - L[i-1]);
         }
     }
     return M[i][j];
@@ -39,10 +40,9 @@ int main() {
         cin >> C[i];
         L[i+1] = C[i];
     }
-    for (int i = 0; i < n + 2; ++i) {
-        M[i] = vector<int>(n + 2, 1e9);
+    for (int i = 0; i < M.size(); ++i) {
+        M[i] = vector<int>(M.size(), 1e9);
         M[i][i] = 0;
     }
-    cout << DP(0, n + 1, M) << endl;
-    cout << M;
+    cout << DP(1, M.size() - 1, M) << endl;
 }
