@@ -5,15 +5,17 @@ int m, n;
 matrix<int> M;
 
 int BT(int i, int j, int s) {
-    if (s = m * n) {
-        return 1;
-    }
     if (!(0 <= i && i < m) || !(0 <= j && j < n)) {
         return 0;
     }
     if (M[i][j] != -1 && M[i][j] != s) {
         return 0;
     }
+    if (s == m * n) {
+        cout << M << endl;
+        return 1;
+    }
+    int pre  = M[i][j];
     M[i][j] = s;
     int acum = 0;
     ++s;
@@ -21,7 +23,7 @@ int BT(int i, int j, int s) {
     acum += BT(i - 1, j, s);
     acum += BT(i, j + 1, s);
     acum += BT(i, j - 1, s);
-    M[i][j] = -1;
+    M[i][j] = pre;
     return acum;
 }
 
@@ -43,7 +45,7 @@ int main() {
             int y; cin >> y;
             M[x][y] = (0.25*(i + 1)*m*n);
         }
-        cout << M;
+        cout << M << endl;
         cout << BT(0, 0, 1);
     }
 }
