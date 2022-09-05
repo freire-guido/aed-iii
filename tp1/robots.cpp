@@ -12,7 +12,6 @@ int BT(int i, int j, int s) {
         return 0;
     }
     if (s == m * n) {
-        cout << M << endl;
         return 1;
     }
     int pre  = M[i][j];
@@ -29,7 +28,9 @@ int BT(int i, int j, int s) {
 
 
 int main() {
+    int t = 0;
     while (true) {
+        ++t;
         cin >> m;
         cin >> n;
         if (m == 0 && n == 0) return 1;
@@ -45,7 +46,6 @@ int main() {
             int y; cin >> y;
             M[x][y] = (0.25*(i + 1)*m*n);
         }
-        cout << M << endl;
-        cout << BT(0, 0, 1);
+        cout << "Case " << t << ": " << BT(0, 0, 1) << endl;
     }
 }

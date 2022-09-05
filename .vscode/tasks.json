@@ -7,6 +7,10 @@
 			"command": "/usr/bin/g++",
 			"args": [
 				"-fdiagnostics-color=always",
+				"-lm",
+				"-lcrypt",
+				"-O2",
+				"-std=c++11",
 				"-g",
 				"${file}",
 				"-o",
