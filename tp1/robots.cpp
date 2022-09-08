@@ -23,22 +23,19 @@ int BT(int i, int j, int s) {
     if (manhattan(i, j, C[c].first, C[c].second) > M[C[c].first][C[c].second] - s) {
         int t = M[i][j];
         M[i][j] = s;
-        cout << M << manhattan(i, j, C[c].first, C[c].second) << " > " << M[C[c].first][C[c].second] - s << ' ' << c << endl << endl;
         M[i][j] = t;
         return 0;
     }
     int pre = M[i][j];
     if (pre == s) {
         ++c;
-        // cout << pre << endl;
     }
     M[i][j] = s;
     int acum = 0;
-    ++s;
-    acum += BT(i + 1, j, s);
-    acum += BT(i - 1, j, s);
-    acum += BT(i, j + 1, s);
-    acum += BT(i, j - 1, s);
+    acum += BT(i + 1, j, s + 1);
+    acum += BT(i - 1, j, s + 1);
+    acum += BT(i, j + 1, s + 1);
+    acum += BT(i, j - 1, s + 1);
     M[i][j] = pre;
     if (pre == s) {
         --c;
@@ -51,6 +48,7 @@ int main() {
     int t = 0;
     while (true) {
         ++t;
+        c = 0;
         cin >> m;
         cin >> n;
         if (m == 0 && n == 0) return 1;
@@ -69,8 +67,6 @@ int main() {
             M[x][y] = (0.25*(i + 1)*m*n);
             C[i + 1] = {x, y};
         }
-        cout << M << endl;
-        BT(0, 0, 1);
-        // cout << "Case " << t << ": " << BT(0, 0, 1) << endl;
+        cout << "Case " << t << ": " << BT(0, 0, 1) << endl;
     }
 }
