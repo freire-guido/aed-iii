@@ -3,6 +3,12 @@ using namespace std;
 
 int m, n;
 matrix<int> M;
+pair<int, int> C[5];
+int c = 0;
+
+int manhattan(int x1, int x2, int y1, int y2) {
+    return abs(x1 - y1) + abs(x2 - y2);
+}
 
 int BT(int i, int j, int s) {
     if (!(0 <= i && i < m) || !(0 <= j && j < n)) {
@@ -14,7 +20,18 @@ int BT(int i, int j, int s) {
     if (s == m * n) {
         return 1;
     }
-    int pre  = M[i][j];
+    if (manhattan(i, j, C[c].first, C[c].second) > M[C[c].first][C[c].second] - s) {
+        int t = M[i][j];
+        M[i][j] = s;
+        cout << M << manhattan(i, j, C[c].first, C[c].second) << " > " << M[C[c].first][C[c].second] - s << ' ' << c << endl << endl;
+        M[i][j] = t;
+        return 0;
+    }
+    int pre = M[i][j];
+    if (pre == s) {
+        ++c;
+        // cout << pre << endl;
+    }
     M[i][j] = s;
     int acum = 0;
     ++s;
@@ -23,6 +40,9 @@ int BT(int i, int j, int s) {
     acum += BT(i, j + 1, s);
     acum += BT(i, j - 1, s);
     M[i][j] = pre;
+    if (pre == s) {
+        --c;
+    }
     return acum;
 }
 
@@ -41,11 +61,16 @@ int main() {
         }
         M[0][0] = 1;
         M[0][1] = m*n;
+        C[0] = {0, 0};
+        C[4] = {0, 1};
         for (int i = 0; i < 3; ++i) {
             int x; cin >> x;
             int y; cin >> y;
             M[x][y] = (0.25*(i + 1)*m*n);
+            C[i + 1] = {x, y};
         }
-        cout << "Case " << t << ": " << BT(0, 0, 1) << endl;
+        cout << M << endl;
+        BT(0, 0, 1);
+        // cout << "Case " << t << ": " << BT(0, 0, 1) << endl;
     }
 }
