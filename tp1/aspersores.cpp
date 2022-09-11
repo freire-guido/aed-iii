@@ -11,16 +11,18 @@ bool cubrio(int i, float k) {
 }
 
 int aspersores() {
-    int j = 0;
+    int j = -1;
     int acum = 0;
     for (float k = 0; k < l; k = asper[j].first + sqrt(pow(asper[j].second, 2) - pow(w, 2) / 4)) {
-        int i = j;
+        bool mejor = false;
+        int i = j + 1;
         for (; i < n; ++i) {
-            if (cubrio(i, k) && asper[i].first + asper[i].second >= asper[j].first + asper[j].second) {
+            if (cubrio(i, k) && (j == -1 || asper[i].first + asper[i].second >= asper[j].first + asper[j].second)) {
                 j = i;
+                mejor = true;
             }
         }
-        if (!cubrio(j, k)) {
+        if (!mejor) {
             return -1;
         }
         ++acum;
