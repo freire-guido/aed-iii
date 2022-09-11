@@ -2,32 +2,38 @@
 using namespace std;
 
 vector<pair<int, int>> asper;
-int jult;
 int n;
 int l;
 int w;
 
-bool cubrio() {
-
+bool cubrio(int i, int k) {
+    return (pow(asper[i].second, 2) - pow(asper[i].first - k, 2)) >= pow(w, 2) / 4;
 }
 
-int aspersores(int k, int j) {
+int aspersores() {
+    int j = 0;
     int acum = 0;
-    for (k = 0; k < l; k + asper[j].first + asper[j].second) {
-        for (int i = j; i < n; ++i) {
-            if (asper[i].first - asper[i].second < k && asper[i].second > asper[j].second) {
+    for (float k = 0; k < l; k += asper[j].first + sqrt(pow(asper[j].second, 2) - pow(w, 2) / 4)) {
+        int i = j;
+        for (; i < n; ++i) {
+            if (cubrio(i, k) && asper[i].first + asper[i].second >= asper[j].first + asper[j].second) {
                 j = i;
             }
         }
-        if (k != 0 && !(cubrio)) { //guardas
+        if (!cubrio(j, k)) {
             return -1;
         }
-        jult = j;
         ++acum;
     }
     return acum;
 }
 
 int main() {
-    
+    cin >> n >> l >> w;
+    asper.resize(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> asper[i].first >> asper[i].second;
+    }
+    sort(asper.begin(), asper.end());
+    cout << aspersores();
 }
