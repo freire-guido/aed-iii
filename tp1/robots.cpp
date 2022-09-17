@@ -38,7 +38,6 @@ int BT(int i, int j, int s) {
         return 0;
     }
     if (encierra(i, j)) {
-        cout << M << endl;
         return 0;
     }
     if (encerrada(i + 1, j) || encerrada(i - 1, j) || encerrada(i, j + 1) || encerrada(i, j - 1) ||
