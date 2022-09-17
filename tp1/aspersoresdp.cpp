@@ -31,17 +31,17 @@ int BT(int i, int k) {
     }
 }
 
+
+
 int main() {
-    cin >> n >> l >> w;
-    M.resize(n + 1);
-    M[0] = {0, w, 0};
-    for (int i = 1; i < n + 1; ++i) {
-        M[i].resize(3);
-        cin >> M[i][0] >> M[i][1] >> M[i][2];
+    while (cin >> n >> l >> w) {
+        M.resize(n + 1);
+        M[0] = {0, w, 0};
+        for (int i = 1; i < n + 1; ++i) {
+            M[i].resize(3);
+            cin >> M[i][0] >> M[i][1] >> M[i][2];
+        }
+        sort(M.begin() + 1, M.end(), &comp);
+        cout << BT(1, 0);
     }
-    sort(M.begin() + 1, M.end(), &comp);
-    for (int i = 0; i < n + 1; ++i) {
-        cout << M[i][0] << " " << M[i][1] << " " << M[i][2] << endl;
-    }
-    cout << BT(1, 0);
 }
