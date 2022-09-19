@@ -1,15 +1,16 @@
-#include <bits/stdc++.h>
+#include "../algo3.h"
 using namespace std;
 
 int n, l, w;
+vector<vector<int>> A;
 vector<vector<int>> M;
 
 float a(int i) {
-    return M[i][0] - sqrt(pow(M[i][1], 2) - pow(w, 2) / 4);
+    return A[i][0] - sqrt(pow(A[i][1], 2) - pow(w, 2) / 4);
 }
 
 float b(int i) {
-    return M[i][0] + sqrt(pow(M[i][1], 2) - pow(w, 2) / 4);
+    return A[i][0] + sqrt(pow(A[i][1], 2) - pow(w, 2) / 4);
 }
 
 bool comp(const vector<int>& a, const vector<int>& b) {
@@ -21,27 +22,34 @@ bool dejasinregar(int i, int k) {
     return a(i) > b(k);
 }
 
-int BT(int i, int k) {
-    if (b(k) >= l) {
-        return 0;
-    } else if (dejasinregar(i, k)) {
-        return 1e9;
-    } else {
-        return min(BT(i + 1, k), M[i][2] + BT(i + 1, i));
+int DP(int i, int k) {
+    if (M[i][k] == -1) {
+        if (b(k) >= l || k == n) {
+            M[i][k] = 0;
+        } else if (dejasinregar(i, k)) {
+            M[i][k] = 99;
+        } else {
+            M[i][k] = min(DP(i + 1, k), A[i][2] + DP(i + 1, i));
+        }
     }
+    return M[i][k];
 }
-
-
 
 int main() {
     while (cin >> n >> l >> w) {
-        M.resize(n + 1);
-        M[0] = {0, w, 0};
+        M.resize(n + 2);
+        M[0] = vector<int>(n + 2, -1);
+        M[n + 1] = vector<int>(n + 2, -1);
+        A.resize(n + 1);
+        A[0] = {0, w, 0};
         for (int i = 1; i < n + 1; ++i) {
-            M[i].resize(3);
-            cin >> M[i][0] >> M[i][1] >> M[i][2];
+            M[i] = vector<int>(n + 2, -1);
+            A[i].resize(3);
+            cin >> A[i][0] >> A[i][1] >> A[i][2];
         }
-        sort(M.begin() + 1, M.end(), &comp);
-        cout << BT(1, 0);
+
+        sort(A.begin() + 1, A.end(), &comp);
+        int res = DP(0, 0);
+        cout << (res >= 99 ? -1 : res) << endl;
     }
 }
