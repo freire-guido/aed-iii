@@ -19,7 +19,6 @@ bool encierra(int x1, int x2) {
         (0 > x1 - 1 || x1 - 1 >= m || M[x1 - 1][x2] != -1) &&
         !(0 > x2 + 1 || x2 + 1 >= n || M[x1][x2 + 1] != -1) &&
         !(0 > x2 - 1 || x2 - 1 >= n || M[x1][x2 - 1] != -1)) ||
-
         (!(0 > x1 + 1 || x1 + 1 >= m || M[x1 + 1][x2] != -1) &&
         !(0 > x1 - 1 || x1 - 1 >= m || M[x1 - 1][x2] != -1) &&
         (0 > x2 + 1 || x2 + 1 >= n || M[x1][x2 + 1] != -1) &&
@@ -34,16 +33,10 @@ int BT(int i, int j, int s) {
     //podas
     if (!(0 <= i && i < m) || !(0 <= j && j < n)) return 0;
     if (M[i][j] != -1 && M[i][j] != s) return 0;
-    if (manhattan(i, j, C[c].first, C[c].second) > M[C[c].first][C[c].second] - s) {
-        return 0;
-    }
-    if (encierra(i, j)) {
-        return 0;
-    }
+    if (manhattan(i, j, C[c].first, C[c].second) > M[C[c].first][C[c].second] - s) return 0;
+    if (encierra(i, j)) return 0;
     if (encerrada(i + 1, j) || encerrada(i - 1, j) || encerrada(i, j + 1) || encerrada(i, j - 1) ||
-        encerrada(i + 1, j + 1) || encerrada(i + 1, j - 1) || encerrada(i - 1, j + 1) || encerrada(i - 1, j - 1)){
-        return 0;
-    }
+        encerrada(i + 1, j + 1) || encerrada(i + 1, j - 1) || encerrada(i - 1, j + 1) || encerrada(i - 1, j - 1)) return 0;
     //caso base
     if (s == m * n) return 1;
     //me guardo el relleno de la casilla para resetearla
@@ -69,12 +62,10 @@ int BT(int i, int j, int s) {
 
 int main() {
     int t = 0;
-    while (true) {
+    while (cin >> m >> n) {
+        if (m == 0 && n == 0) return 1;
         ++t;
         c = 0;
-        cin >> m;
-        cin >> n;
-        if (m == 0 && n == 0) return 1;
 
         M.resize(m);
         for (int i = 0; i < m; ++i) {
