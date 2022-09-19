@@ -14,15 +14,15 @@ bool encerrada(int x1, int x2) {
         (0 > x2 - 1 || x2 - 1 >= n || M[x1][x2 - 1] != -1));
 }
 
-bool encierra(int x1, int x2) {
-    return ((0 > x1 + 1 || x1 + 1 >= m || M[x1 + 1][x2] != -1) &&
-        (0 > x1 - 1 || x1 - 1 >= m || M[x1 - 1][x2] != -1) &&
-        !(0 > x2 + 1 || x2 + 1 >= n || M[x1][x2 + 1] != -1) &&
-        !(0 > x2 - 1 || x2 - 1 >= n || M[x1][x2 - 1] != -1)) ||
-        (!(0 > x1 + 1 || x1 + 1 >= m || M[x1 + 1][x2] != -1) &&
-        !(0 > x1 - 1 || x1 - 1 >= m || M[x1 - 1][x2] != -1) &&
-        (0 > x2 + 1 || x2 + 1 >= n || M[x1][x2 + 1] != -1) &&
-        (0 > x2 - 1 || x2 - 1 >= n || M[x1][x2 - 1] != -1));
+bool encierra(int x1, int x2, int k) {
+    return ((0 > x1 + 1 || x1 + 1 >= m || (M[x1 + 1][x2] != -1 && M[x1 + 1][x2] < k)) &&
+        (0 > x1 - 1 || x1 - 1 >= m || M[x1 - 1][x2] != -1 && M[x1 - 1][x2] < k) &&
+        !(0 > x2 + 1 || x2 + 1 >= n || M[x1][x2 + 1] != -1 && M[x1][x2 + 1] < k) &&
+        !(0 > x2 - 1 || x2 - 1 >= n || M[x1][x2 - 1] != -1 && M[x1][x2 - 1] < k)) ||
+        (!(0 > x1 + 1 || x1 + 1 >= m || M[x1 + 1][x2] != -1 && M[x1 + 1][x2] < k) &&
+        !(0 > x1 - 1 || x1 - 1 >= m || M[x1 - 1][x2] != -1 && M[x1 - 1][x2] < k) &&
+        (0 > x2 + 1 || x2 + 1 >= n || M[x1][x2 + 1] != -1 && M[x1][x2 + 1] < k) &&
+        (0 > x2 - 1 || x2 - 1 >= n || M[x1][x2 - 1] != -1 && M[x1][x2 - 1] < k));
 }
 
 int manhattan(int x1, int x2, int y1, int y2) {
@@ -34,7 +34,7 @@ int BT(int i, int j, int s) {
     if (!(0 <= i && i < m) || !(0 <= j && j < n)) return 0;
     if (M[i][j] != -1 && M[i][j] != s) return 0;
     if (manhattan(i, j, C[c].first, C[c].second) > M[C[c].first][C[c].second] - s) return 0;
-    if (encierra(i, j)) return 0;
+    if (encierra(i, j, s)) return 0;
     if (encerrada(i + 1, j) || encerrada(i - 1, j) || encerrada(i, j + 1) || encerrada(i, j - 1) ||
         encerrada(i + 1, j + 1) || encerrada(i + 1, j - 1) || encerrada(i - 1, j + 1) || encerrada(i - 1, j - 1)) return 0;
     //caso base
