@@ -6,14 +6,6 @@ vector<vector<int>> M;
 pair<int, int> C[5];
 int c = 0;
 
-bool encerrada(int x1, int x2) {
-    return (0 <= x1 && x1 < m && 0 <= x2 && x2 < n && M[x1][x2] == -1) && (
-        (0 > x1 + 1 || x1 + 1 >= m || M[x1 + 1][x2] != -1) &&
-        (0 > x1 - 1 || x1 - 1 >= m || M[x1 - 1][x2] != -1) &&
-        (0 > x2 + 1 || x2 + 1 >= n || M[x1][x2 + 1] != -1) &&
-        (0 > x2 - 1 || x2 - 1 >= n || M[x1][x2 - 1] != -1));
-}
-
 bool encierra(int x1, int x2, int k) {
     return ((0 > x1 + 1 || x1 + 1 >= m || (M[x1 + 1][x2] != -1 && M[x1 + 1][x2] < k)) &&
         (0 > x1 - 1 || x1 - 1 >= m || M[x1 - 1][x2] != -1 && M[x1 - 1][x2] < k) &&
@@ -33,14 +25,13 @@ int BT(int i, int j, int s) {
     //podas
     if (!(0 <= i && i < m) || !(0 <= j && j < n)) return 0;
     if (M[i][j] != -1 && M[i][j] != s) return 0;
-    if (manhattan(i, j, C[c].first, C[c].second) > M[C[c].first][C[c].second] - s) return 0;
+    if ((4*s) % (m*n) == 0 && (i != C[(4*s) / (m*n)].first || j != C[(4*s) / (m*n)].second)) return 0;
+    //if (manhattan(i, j, C[c].first, C[c].second) > M[C[c].first][C[c].second] - s) return 0;
     if (encierra(i, j, s)) return 0;
-    if (encerrada(i + 1, j) || encerrada(i - 1, j) || encerrada(i, j + 1) || encerrada(i, j - 1) ||
-        encerrada(i + 1, j + 1) || encerrada(i + 1, j - 1) || encerrada(i - 1, j + 1) || encerrada(i - 1, j - 1)) return 0;
     //caso base
     if (s == m * n) return 1;
     //me guardo el relleno de la casilla para resetearla
-    int pre = M[i][j];
+    int pre = M[i][j]; 
     if (pre == s) {
         ++c;
     }
