@@ -1,8 +1,8 @@
-#include "../algo3.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 int m, n;
-matrix<int> M;
+vector<vector<int>> M;
 pair<int, int> C[5];
 int c = 0;
 
@@ -63,7 +63,7 @@ int BT(int i, int j, int s) {
 int main() {
     int t = 0;
     while (cin >> m >> n) {
-        if (m == 0 && n == 0) return 1;
+        if (m == 0 && n == 0) return 0;
         ++t;
         c = 0;
 
