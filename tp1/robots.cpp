@@ -26,8 +26,8 @@ int BT(int i, int j, int s) {
     if (!(0 <= i && i < m) || !(0 <= j && j < n)) return 0;
     if (M[i][j] != -1 && M[i][j] != s) return 0;
     if ((4*s) % (m*n) == 0 && (i != C[(4*s) / (m*n)].first || j != C[(4*s) / (m*n)].second)) return 0;
-    //if (manhattan(i, j, C[c].first, C[c].second) > M[C[c].first][C[c].second] - s) return 0;
     if (encierra(i, j, s)) return 0;
+    //if (manhattan(i, j, C[c].first, C[c].second) > M[C[c].first][C[c].second] - s) return 0; (no se porque no anda)
     //caso base
     if (s == m * n) return 1;
     //me guardo el relleno de la casilla para resetearla

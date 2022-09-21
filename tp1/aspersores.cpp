@@ -1,4 +1,4 @@
-#include "../algo3.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 vector<pair<int, int>> asper;

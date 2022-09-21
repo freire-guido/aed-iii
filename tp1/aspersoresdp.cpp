@@ -1,4 +1,4 @@
-#include "../algo3.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 int n, l, w;
@@ -24,7 +24,7 @@ bool dejasinregar(int i, int k) {
 
 int DP(int i, int k) {
     if (M[i][k] == -1) {
-        if (b(k) >= l || k == n) {
+        if (b(k) >= l) {
             M[i][k] = 0;
         } else if (dejasinregar(i, k)) {
             M[i][k] = 99;
