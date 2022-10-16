@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#define INF 1e9;
 
 template <typename T>
 using matrix = std::vector<std::vector<T>>;
@@ -7,7 +8,7 @@ template <typename T>
 std::ostream& operator<<(std::ostream& os, const matrix<T>& m) {
     for (int i = 0; i < m.size(); ++i) {
         for (int j = 0; j < m[i].size(); ++j) {
-            std::cout << m[i][j] << " ";
+            std::cout << std::setw(2) << std::setfill('0') << m[i][j] << " ";
         }
         std::cout << std::endl;
     }
