@@ -1,4 +1,4 @@
-#include "../algo3.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 struct Estado {
@@ -10,11 +10,22 @@ struct Estado {
 
 int n, m, k;
 vector<int> ady[3000];
+int dist[3000][3000];
 vector<Estado> sup;
 
-int dijkstra() {
-    int dist[n][n];
-    for (int i = 0; i < n; ++i) for (int j = 0; j < n; ++j) dist[i][j] = INF;
+string path(int t, int d) {
+    if (t == 0) {
+        return "1";
+    }
+    for (int i = 0; i < n; ++i) {
+        if (dist[i][t] == d) {
+            return to_string(i + 1) + " " + path(i, d - 1);
+        }
+    }
+}
+
+pair<int, string> dijkstra() {
+    for (int i = 0; i < n; ++i) for (int j = 0; j < n; ++j) dist[i][j] = 1e9;
     priority_queue<Estado, vector<Estado>, greater<Estado>> cp;
     cp.push(Estado(0, 0, 0));
 
@@ -31,13 +42,13 @@ int dijkstra() {
         }
     }
 
-    int min = INF;
+    int min = 1e9;
     for (int i = 0; i < n; ++i) {
         if (min > dist[i][n-1]) {
             min = dist[i][n-1];
         }
     }
-    return min == 1e9 ? -1 : min;
+    return {min == 1e9 ? -1 : min, path(n - 1, min)};
 }
 
 int main() {
@@ -53,6 +64,10 @@ int main() {
             int a, b, c; cin >> a >> b >> c;
             sup.push_back(Estado(a - 1, b - 1, c - 1));
         }
-        cout << dijkstra() << endl;
+        pair<int, string> res = dijkstra();
+        cout << res.first << endl;
+        if (res.second != "") {
+            cout << res.second << endl;
+        }
     }
 }
