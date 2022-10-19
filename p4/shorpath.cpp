@@ -22,7 +22,7 @@ int dijkstra() {
         Estado e = cp.top(); cp.pop();
         if (dist[e.u][e.v] < e.p) continue;
         dist[e.u][e.v] = e.p;
-        
+
         for (int w: ady[e.v]) {
             if (find(sup.begin(), sup.end(), Estado(e.u, e.v, w)) == sup.end() && dist[e.v][w] > dist[e.u][e.v] + 1) {
                 dist[e.v][w] = dist[e.u][e.v] + 1;
@@ -37,18 +37,21 @@ int dijkstra() {
             min = dist[i][n-1];
         }
     }
-    return min;
+    return min == 1e9 ? -1 : min;
 }
 
 int main() {
     while (cin >> n >> m >> k) {
+        for (int i = 0; i < n; ++i) ady[i].clear();
+        sup.clear();
         for (int i = 0; i < m; ++i) {
             int u, v; cin >> u >> v;
             ady[u-1].push_back(v-1);
+            ady[v-1].push_back(u-1);
         }
         for (int i = 0; i < k; ++i) {
             int a, b, c; cin >> a >> b >> c;
-            sup.push_back(Estado(a, b, c));
+            sup.push_back(Estado(a - 1, b - 1, c - 1));
         }
         cout << dijkstra() << endl;
     }
