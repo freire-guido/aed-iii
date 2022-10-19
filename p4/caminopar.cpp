@@ -12,7 +12,7 @@ struct Estado {
 };
 
 int dijkstra() {
-    for (int i = 0; i < N; ++i) { dist[i][0] = INF; dist[i][1] = INF};
+    for (int i = 0; i < N; ++i) { dist[i][0] = INF; dist[i][1] = INF };
     priority_queue<Estado, vector<Estado>, greater<Estado>> cp;
     cp.push(Estado(0, 0, 0));
 
