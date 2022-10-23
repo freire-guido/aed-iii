@@ -8,6 +8,7 @@ vector<int> vuelven;
 int dist[501];
 
 int dijkstra() {
+    dist[0] = 0;
     priority_queue<int, vector<int>, greater<int>> cp;
     cp.push(0);
     while (!cp.empty()) {
@@ -36,18 +37,19 @@ int main() {
         cin >> q;
         for (int i = 0; i < q; ++i) {
             int f; cin >> f;
-            ady[0].push_back({f, 0});
+            ady[f].push_back({0, 0});
         }
         for (int u = 1; u <= p; ++u) {
             int r; cin >> r;
             for (int i = 0; i < r; ++i) {
             //  (!) Puede ocurrir que dos reglas distintas
             //      definan el pasaje de la caja hacia un mismo feligres.
+            //  (?) Me quedo siempre con la de minimo costo
                 int m, v; cin >> m >> v;
                 if (v == 0) vuelven.push_back(u);
-                ady[u].push_back({v, m});
+                ady[v].push_back({u, m});
             }
         }
-        cout << c / dijkstra() - 1 << endl;
+        cout << c / dijkstra() << endl;
     }
 }
