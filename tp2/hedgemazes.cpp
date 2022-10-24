@@ -6,6 +6,24 @@ int r, c, q;
 vector<int> ady[10000];
 int parent[10000];
 
+void bfs() {
+    queue<int> c;
+    for (int u = 0; u < r; ++u) {
+        if (parent[u] == u) {
+            c.push(u);
+        }
+    }
+    while (!c.empty()) {
+        int u = c.front(); c.pop();
+        for (int v: ady[u]) {
+            if (parent[v] != v) {
+                parent[v] = u;
+                c.push(v);
+            }
+        }
+    }
+}
+
 void dfs() {
     for (int u = 0; u < r; ++u) {
         if (parent[u] == -1) {
@@ -41,7 +59,7 @@ int main() {
 
         for (int i = 0; i < q; ++i) {
             int s, t; cin >> s >> t;
-            cout << (res[s - 1][t - 1] == 1 ? "Y" : "N") << endl;
+            cout << (parent[s] == parent[t] ? "Y" : "N") << endl;
         }
         cout << "-" << endl;
     }
