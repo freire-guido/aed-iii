@@ -9,7 +9,6 @@ struct Ecuacion {
 
 int n, m, k;
 vector<int> D;
-// (!) n, m, k no acotados por enunciado
 vector<Ecuacion> ecs;
 vector<int> x;
 
