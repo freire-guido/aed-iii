@@ -7,7 +7,28 @@ vector<int> ady[10000];
 vector<int> ady1[10000];
 int parent[10000];
 int tin[10000];
-int puente[10000];
+int raiz[10000];
+
+void dfs_visit(int u, vector<int> ady[], int t, int r) {
+    tin[u] = t++;
+    for (int v: ady[u]) {
+        raiz[v] = r;
+        if (parent[v] == -1) {
+            parent[v] = u;
+            dfs_visit(v, ady, t, r);
+        }
+    }
+}
+
+void dfs(vector<int> ady[]) {
+    for (int u = 0; u < r; ++u) {
+        if (parent[u] == -1) {
+            raiz[u] = u;
+            parent[u] = u;
+            dfs_visit(u, ady, 0, u);
+        }
+    }
+}
 
 int dp(int s) {
     dfs(ady);
@@ -19,27 +40,9 @@ int dp(int s) {
     }
     if (cant == 0 && parent[s] != s) {
         ady1[s].push_back(parent[s]);
+        ady1[parent[s]].push_back(s);
     }
     return cant;
-}
-
-void dfs_visit(int u, vector<int> ady[], int t = 0) {
-    tin[u] = t++;
-    for (int v: ady[u]) {
-        if (parent[v] == -1) {
-            parent[v] = u;
-            dfs_visit(v, ady, t);
-        }
-    }
-}
-
-void dfs(vector<int> ady[]) {
-    for (int u = 0; u < r; ++u) {
-        if (parent[u] == -1) {
-            parent[u] = u;
-            dfs_visit(u, ady, 0);
-        }
-    }
 }
 
 int main() {
@@ -54,9 +57,11 @@ int main() {
             ady[b - 1].push_back(a - 1);
         }
         dp(0);
+        for (int i = 0; i < r; ++i) parent[i] = -1;
+        dfs(ady1);
         for (int i = 0; i < q; ++i) {
             int s, t; cin >> s >> t;
-            cout << (parent[s] == parent[t] ? "Y" : "N") << endl;
+            cout << (raiz[s - 1] == raiz[t - 1] ? "Y" : "N") << endl;
         }
         cout << "-" << endl;
     }
