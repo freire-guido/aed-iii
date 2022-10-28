@@ -29,7 +29,9 @@ int dijkstra() {
 
 int main() {
     int t; cin >> t;
+    t = 0;
     while (cin >> c >> p) {
+        t++;
         vuelven.clear();
         for (int i = 0; i <= p; ++i) {
             ady[i].clear();
@@ -54,6 +56,6 @@ int main() {
                 }
             }
         }
-        cout << c / (dijkstra() - 1) << endl;
+        cout << (c - 2) / (dijkstra() - 1) << endl;
     }
 }
