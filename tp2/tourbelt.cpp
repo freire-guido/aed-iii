@@ -33,11 +33,19 @@ int kruskal() {
     for (Arista& a: E) {
         // Es externa
         if (find_set(a.u) != find_set(a.v)) {
-            parent[find_set(a.u)] = find_set(a.v);
+            parent[find_set(a.v)] = find_set(a.u);
             C[find_set(a.u)].tam += (C[find_set(a.v)]).tam;
             C[find_set(a.u)].minInt = min(C[find_set(a.u)].minInt, min(C[find_set(a.v)].minInt, a.p));
             if (C[find_set(a.u)].maxExt == a) {
-                // Busco la segunda
+                // Cada arista es interna a lo sumo n veces
+                Arista aMax = Arista(0, 0, -1);
+                for (int i = 0; i < n; ++i) {
+                    if (C[find_set(i)].maxExt.u == find_set(a.u) || C[find_set(i)].maxExt.v == find_set(a.u)) {
+                        // (!) min es max
+                        aMax = min(aMax, C[find_set(i)].maxExt);
+                    }
+                }
+                C[find_set(a.u)].maxExt = aMax;
             } else {
                 C[find_set(a.u)].maxExt = max(C[find_set(a.u)].maxExt, C[find_set(a.v)].maxExt);
             }
@@ -72,7 +80,7 @@ int main() {
 
             Arista maxExt = Arista(0, 0, -1);
             for (auto a: ady[i]) {
-                // min es max !!!
+                // (!) min es max
                 maxExt = min(maxExt, a);
             }
             C.push_back(Componente(i, 1e9, maxExt, 1));
