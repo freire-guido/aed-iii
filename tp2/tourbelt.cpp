@@ -10,18 +10,11 @@ struct Arista {
     bool operator==(const Arista& a) const { return a.u == u && a.v == v && a.p == p; }
 };
 
-struct Componente {
-    int p, minInt, tam;
-    Arista maxExt = Arista(0, 0, -1);
-    Componente(int a, int b, const Arista& c, int d) { p = a; minInt = b; maxExt = Arista(c); tam = d; }
-};
-
-
 int n, m;
 vector<Arista> E;
-vector<Componente> C;
-vector<Arista> ady[5000];
+pair<int, int> ady[5000][5000]; // {max, min}
 int parent[5000];
+int tam[5000];
 
 int find_set(int x) {
     return parent[x] == x ? x : parent[x] = find_set(parent[x]);
@@ -31,35 +24,25 @@ int kruskal() {
     sort(E.begin(), E.end());
     int res = 0;
     for (Arista& a: E) {
-        // Es externa
         if (find_set(a.u) != find_set(a.v)) {
+            for (int i = 0; i < n; ++i) {
+                int j = find_set(i);
+                ady[find_set(a.u)][j].first = max(ady[find_set(a.u)][j].first, ady[find_set(a.v)][j].first);
+                ady[j][find_set(a.u)].first = ady[find_set(a.u)][j].first;
+                ady[find_set(a.u)][j].second = min(ady[find_set(a.u)][j].second, ady[find_set(a.v)][j].second);
+                ady[j][find_set(a.u)].second = ady[find_set(a.u)][j].second;
+            }
             parent[find_set(a.v)] = find_set(a.u);
-            C[find_set(a.u)].tam += (C[find_set(a.v)]).tam;
-            C[find_set(a.u)].minInt = min(C[find_set(a.u)].minInt, min(C[find_set(a.v)].minInt, a.p));
-            if (C[find_set(a.u)].maxExt == a) {
-                // Cada arista es interna a lo sumo n veces
-                Arista aMax = Arista(0, 0, -1);
-                for (int i = 0; i < n; ++i) {
-                    if (C[find_set(i)].maxExt.u == find_set(a.u) || C[find_set(i)].maxExt.v == find_set(a.u)) {
-                        // (!) min es max
-                        aMax = min(aMax, C[find_set(i)].maxExt);
-                    }
+            tam[find_set(a.u)] += tam[find_set(a.v)];
+            int maxExt = -1;
+            int minInt = ady[find_set(a.u)][find_set(a.u)].second;
+            for (int j = 0; j < n; ++j) {
+                if (find_set(j) != find_set(a.u)) {
+                    maxExt = max(maxExt, ady[find_set(a.u)][j].first);
                 }
-                C[find_set(a.u)].maxExt = aMax;
-            } else {
-                C[find_set(a.u)].maxExt = max(C[find_set(a.u)].maxExt, C[find_set(a.v)].maxExt);
             }
-
-            if (C[find_set(a.u)].minInt > C[find_set(a.u)].maxExt.p) {
-                res += C[find_set(a.u)].tam;
-            }
-        // Es interna
-        } else {
-            if (a.p < C[find_set(a.u)].minInt) {
-                C[find_set(a.u)].minInt = a.p;
-                if (C[find_set(a.u)].minInt <= C[find_set(a.u)].maxExt.p) {
-                    res -= C[find_set(a.u)].tam;
-                }
+            if (maxExt < minInt) {
+                res += tam[find_set(a.u)];
             }
         }
     }
@@ -70,21 +53,17 @@ int main() {
     int t; cin >> t;
     while (cin >> n >> m) {
         E.clear();
+        for (int i = 0; i < n; ++i) { parent[i] = i; }
+        for (int i = 0; i < n; ++i) tam[i] = 1;
+        for (int i = 0; i < n; ++i) for (int j = 0; j < n; ++j) ady[i][j] = {-1, 1e9};
+
         for (int i = 0; i < m; ++i) {
             int v, w, k; cin >> v >> w >> k;
-            E.push_back(Arista(v, w, k));
-            ady[v].push_back(Arista(v, w, k));
+            E.push_back(Arista(--v, --w, k));
+            ady[v][w] = {k, k};
+            ady[w][v] = {k, k};
         }
-        for (int i = 0; i <= n; ++i) {
-            parent[i] = i;
 
-            Arista maxExt = Arista(0, 0, -1);
-            for (auto a: ady[i]) {
-                // (!) min es max
-                maxExt = min(maxExt, a);
-            }
-            C.push_back(Componente(i, 1e9, maxExt, 1));
-        }
         cout << kruskal() << endl;
     }       
 }
