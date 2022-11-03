@@ -32,9 +32,10 @@ int kruskal() {
                 ady[find_set(a.u)][j].second = min(ady[find_set(a.u)][j].second, ady[find_set(a.v)][j].second);
                 ady[j][find_set(a.u)].second = ady[find_set(a.u)][j].second;
             }
+            ady[find_set(a.u)][find_set(a.u)].second = min(ady[find_set(a.u)][find_set(a.u)].second, ady[find_set(a.v)][find_set(a.v)].second);
             tam[find_set(a.u)] += tam[find_set(a.v)];
             int maxExt = -1;
-            int minInt = min(ady[find_set(a.u)][find_set(a.u)].second, ady[find_set(a.v)][find_set(a.v)].second);
+            int minInt = ady[find_set(a.u)][find_set(a.u)].second;
             parent[find_set(a.v)] = find_set(a.u);
             for (int j = 0; j < n; ++j) {
                 if (find_set(j) != find_set(a.u)) {
