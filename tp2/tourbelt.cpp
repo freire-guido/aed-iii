@@ -23,7 +23,7 @@ int find_set(int x) {
 int kruskal() {
     sort(E.begin(), E.end());
     int res = 0;
-    for (Arista& a: E) {
+    for (const Arista& a: E) {
         if (find_set(a.u) != find_set(a.v)) {
             for (int i = 0; i < n; ++i) {
                 int j = find_set(i);
@@ -32,10 +32,10 @@ int kruskal() {
                 ady[find_set(a.u)][j].second = min(ady[find_set(a.u)][j].second, ady[find_set(a.v)][j].second);
                 ady[j][find_set(a.u)].second = ady[find_set(a.u)][j].second;
             }
-            parent[find_set(a.v)] = find_set(a.u);
             tam[find_set(a.u)] += tam[find_set(a.v)];
             int maxExt = -1;
-            int minInt = ady[find_set(a.u)][find_set(a.u)].second;
+            int minInt = min(ady[find_set(a.u)][find_set(a.u)].second, ady[find_set(a.v)][find_set(a.v)].second);
+            parent[find_set(a.v)] = find_set(a.u);
             for (int j = 0; j < n; ++j) {
                 if (find_set(j) != find_set(a.u)) {
                     maxExt = max(maxExt, ady[find_set(a.u)][j].first);
