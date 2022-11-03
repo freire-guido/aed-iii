@@ -9,7 +9,7 @@
 				"-fdiagnostics-color=always",
 				"-lm",
 				"-lcrypt",
-				"-O2",
+				// "-O2",
 				"-std=c++11",
 				"-g",
 				"${file}",
