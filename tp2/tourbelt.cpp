@@ -20,30 +20,37 @@ int find_set(int x) {
     return parent[x] == x ? x : parent[x] = find_set(parent[x]);
 }
 
+int unite_set(int a, int b) {
+    a = find_set(a); b = find_set(b);
+    if (tam[b] > tam[a]) swap(a, b);
+    tam[a] += tam[b];
+    return parent[b] = a;
+}
+
+
 int kruskal() {
     sort(E.begin(), E.end());
     int res = 0;
     for (const Arista& a: E) {
-        if (find_set(a.u) != find_set(a.v)) {
-            for (int i = 0; i < n; ++i) {
-                int j = find_set(i);
-                ady[find_set(a.u)][j].first = max(ady[find_set(a.u)][j].first, ady[find_set(a.v)][j].first);
-                ady[j][find_set(a.u)].first = ady[find_set(a.u)][j].first;
-                ady[find_set(a.u)][j].second = min(ady[find_set(a.u)][j].second, ady[find_set(a.v)][j].second);
-                ady[j][find_set(a.u)].second = ady[find_set(a.u)][j].second;
-            }
-            ady[find_set(a.u)][find_set(a.u)].second = min(ady[find_set(a.u)][find_set(a.u)].second, ady[find_set(a.v)][find_set(a.v)].second);
-            tam[find_set(a.u)] += tam[find_set(a.v)];
-            int maxExt = -1;
-            int minInt = ady[find_set(a.u)][find_set(a.u)].second;
-            parent[find_set(a.v)] = find_set(a.u);
+        int u = find_set(a.u);
+        int v = find_set(a.v);
+        if (u != v) {
+            if (tam[v] > tam[u]) swap(v, u);
             for (int j = 0; j < n; ++j) {
-                if (find_set(j) != find_set(a.u)) {
-                    maxExt = max(maxExt, ady[find_set(a.u)][j].first);
+                ady[j][u].first = ady[u][j].first = max(ady[u][j].first, ady[v][j].first);
+                ady[j][u].second = ady[u][j].second = min(ady[u][j].second, ady[v][j].second);
+            }
+            unite_set(a.u, a.v);
+            ady[u][u].second = min(ady[u][u].second, ady[v][v].second);
+            int maxExt = -1;
+            int minInt = ady[u][u].second;
+            for (int j = 0; j < n; ++j) {
+                if (find_set(j) != u) {
+                    maxExt = max(maxExt, ady[u][j].first);
                 }
             }
             if (maxExt < minInt) {
-                res += tam[find_set(a.u)];
+                res += tam[u];
             }
         }
     }
