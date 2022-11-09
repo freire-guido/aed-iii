@@ -1,0 +1,197 @@
+\documentclass[a4paper]{article} 
+
+\setlength{\parskip}{0.1em}
+\newcommand{\tab}{~ \qquad}
+\usepackage{caratula}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{}
+
+\begin{document}
+
+\titulo{Trabajo Practico 2}
+\subtitulo{Algoritmos sobre grafos}
+\fecha{11 de Noviembre de 2022}
+\materia{Algoritmos y Estructuras de Datos III}
+\grupo{\href{https://onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_authorstats&userid=1329431}{Los backtrackers}}
+\integrante{Giansiracusa, Magali}{588/20}{giansiracusamagali@gmail.com}
+\integrante{Marraffini, Giovanni Franco Gabriel}{292/21}{giovanni.marraffini@gmail.com}
+\integrante{Freire, Guido Ignacio}{978/21}{gfreire@dc.uba.ar}
+\integrante{Serpa Barberena, Lautaro}{1128/21}{lautiserpa@gmail.com}
+
+\maketitle
+
+\section{Ejercicio 1: DFS}
+
+
+
+\subsection{Idea}
+El problema se puede modelar con un grafo, en donde los pasillos representan las aristas y las habitaciones los vértices. El problema consiste en indicar caminos simples, es decir, sin repeticion de los vertices en el recorrido. Para indicar un buen desafío, hay que averiguar si entre dos vértices hay un único camino que los una. 
+Una vez que se sepa dicha información, para que la reina pueda acceder a ella y solo le tome O(1) de complejidad, los resultados del algoritmo se van a representar en una matriz de booleanos de n x n vértices, en donde se indica True si hay un camino simple único entre los vértices i,j y False en el caso contrario. De esa manera, la reina solamente deberá buscar la posición i (habitación inicial) j (habitación final) y obtener su resultado.
+El algoritmo que resuelve este problema debe tener una complejidad lineal con respecto a las aristas y a los vértices de entrada. Como se buscan caminos simples, es importante encontrar los ciclos 
+
+
+\subsection{Demostración}
+
+\subsection{Algoritmo}
+
+Primero se ejecuta DFS para encontrar las aristas que no pertenecen a ningún ciclo.
+
+
+
+\subsection{Conclusi\'on}
+
+\newpage
+
+\section{Ejercicio 2: Árbol generador mínimo} \label{ej2}
+
+
+
+\subsection{Idea}
+Sea $G=(V,E,w)$ un grafo pesado con $n = |V|$ y $m = |E|$.
+
+Primero se define la función "Mext" que dado un subconjunto $a$ (tambien llamado componente) de $V$ devuelve el peso máximo entre todas las aristas que conectan un nodo de la componente $a$ con un nodo fuera de la misma. En caso de que no exista una arista así, $Mext(a)=-1$.
+
+Luego se define "mint" al peso mínimo entre todas las aristas que conectan dos nodos de la componente $a$. En caso de que no exista ninguna arista así, $mint(a)=\infty$.
+
+Con esto en mente se intenta usar fuertemente que una componente $a$ es cadidata si y sólo si  $Mext(a) < mint(a)$.
+
+Para ello, como toda componente candidata va a ser, en alguna iteración, una de las componentes conexas del bosque que mantiene el algoritmo de Kruskal para buscar un árbol generador máximo, entonces basta con fijarse si  $Mext(a) < mint(a)$ cada vez que se modifica una componente $a$ en una iteración. En caso de que efectivamente sea una candidata se debe agregar a la suma acumulada hasta el momento la cantidad de nodos de esa componente.
+
+\subsection{Algoritmo}
+En primer lugar se lee el input para modelar el grafo de las islas.
+Durante este proceso además se reservan en memoria los siguientes valores del
+input:
+
+\begin{itemize}
+    \item Primero se asigna $(-1,\infty)$ a todas las posiciones de una matriz de $|V| x |V|$. Luego se guarda en la posición $i,j$ ($i,j \in \mathbb{N}$) la tupla $(k,k)$ donde $k$ es el peso de la arista del nodo $i$ al $j$. En caso de que no exista esa arista (como es el caso de la diagonal de la matriz) queda $(-1,\infty)$. $O(n^2)$ 
+\end{itemize}
+
+Luego se ejecuta Kruskal pero con las siguientes modificaciones al momento de unir dos componentes:
+
+\begin{itemize}
+    \item  Primero se  modifica la matriz para que siempre en la posición $i,j$ se encuentre la tupla $(l , m)$ donde $l$ y $m$ son los pesos de la máxima y la mínima (respectivamente) arista que conecta las componentes representadas por los nodos $i$ y $j$ (cuando se dice representada por un nodo se refiere a que el find set de cualquiera de los nodos de esa componente devuelve el nodo $i$ o $j$ correspondientemente). Esto se hace incluso para el mínimo entre una componente y ella misma en la diagonal, de modo que siempre se conoce el mínimo interno de cada componente. Esto se hace fijando $i$ como la componente recién unida e iterando sobre $j$ como las demás componentes. O(n)
+    \item Luego se realiza efectivamente la unión priorizando como parent a la componente de mayor tamaño (rango) de modo que se preserva la complejidad descripta en el cormen respecto a la inversa de ackerman. 
+    
+    \item Luego se calcula el máximo externo de la componente unida (con un ciclo que recorre para la componente $i$  todas las componentes $j$ y busca el máximo entre todos los primeros elementos de las tuplas que se encuentran en las posiciones $i,j$ de la matriz) O(n)
+    \item Por último si el máximo externo es menor al mínimo interno se agrega el tamaño (cantidad de nodos) de la componente a la suma acumulada hasta el momento.
+\end{itemize}
+
+
+\subsection{Demostración}
+
+Sea $G=(V,E,w)$ un grafo pesado con $n = |V|$ y $m = |E|$. Sea  $\mathcal{P}(V)$ el conjunto de partes de $V$. Para toda componente $a \in  \mathcal{P}(V)$ se definen las siguientes funciones: 
+
+\begin{itemize}
+    \item Se define $Mext: \mathcal{P}(V) \longrightarrow \mathbb{N} \cup \{ -1 \}$ tal que, si $\exists k \in \mathbb{N} $ $/$ $   [(\forall e = (u,v) \in E : u \in a $ $\land$ $ v \notin a ) w(e) \leq k ] $  $\land$   $ [(\exists e = (u,v) \in E : u \in a $ $\land$ $ v \notin a ) w(e) = k] $  entonces $Mext(a)=k$. En caso contrario $Mext(a)=-1$
+    \item Se define $mint: \mathcal{P}(V) \longrightarrow \mathbb{N} \cup \{ \infty \} $ tal que, si $\exists k \in \mathbb{N} $ $/$ $   [(\forall e = (u,v) \in E : u \in a $ $\land$ $ v \in a ) w(e) \geq k ] $  $\land$   $ [(\exists e = (u,v) \in E : u \in a $ $\land$ $ v \in a ) w(e) = k] $  entonces $mint(a)=k$. En caso contrario $mint(a)= \infty$.
+\end{itemize}
+\\
+Por definición del enunciado, una componente $a$ es candidata si y sólo si $(\forall e_1 = (u,v), e_2 = (o, w) \in E : u, w, o \in a $  $\land$ $ v \notin a)$ $ w(e_1) < w(e_2) $ 
+\\
+\\
+Se quiere ver que una componente $a$ es candidata si y sólo si $Mext(a) < mint(a)$. Por definicion de $Mext$ y $mint$: 
+ $Mext(a) < mint(a)$ $\iff$ $ (\forall e_1 = (u,v), e_2 = (o, w) \in E : u, w, o \in a $  $\land$ $ v \notin a)$ 
+$ w(e_1) \leq Mext(a) < mint(a) \leq w(e_2) $ $\iff$ $a$ es candidata (por definición de candidata).
+\\
+\\
+Luego se debe ver si una componente $a$ es candidata  entonces $a$ es una de las componentes conexas del bosque que mantiene el algoritmo de Kruskal para buscar un árbol generador máximo.
+
+Primero se debe observar que por bibliografía el algoritmo de Kruskal siempre busca primero las aristas de mayor peso y por lo tanto si hay una componente conexa del árbol entonces las aristas que conectan un nodo de esta componente con un nodo de otra tienen peso menor o igual a alguna de las aristas que conectan dos nodos de la misma componente. Pues si es una componente entonces el algoritmo itero previamente sobre dicha arista uniendo los nodos en una única componente. Y por lo tanto si itero primero sobre dicha arista, esta tiene peso mayor o igual a las demás.
+
+Es decir, por como se comporta Kruskal (por bibliografía y/o teórica), $a$ es una de las componentes conexas del bosque que mantiene el algoritmo de Kruskal para buscar un árbol generador máximo si y sólo si:
+$(\exists e_1 = (u,v) \in E : u,v \in a) (\forall e_2 = (o, w) \in E : o \in a $  $\land$ $ w \notin a) w(e_2)\leq w(e_1) $.
+\\
+\\
+Finalmente, $a$ es candidata $\iff$  $(\forall e_1 = (u,v), e_2 = (o, w) \in E : u, w, o \in a $  $\land$ $ v \notin a)$ 
+$ w(e_1) < w(e_2) $ $ \implies $ $(\forall e_1 = (u,v) \in E : u,v \in a) (\forall e_2 = (o, w) \in E : o \in a $  $\land$ $ w \notin a)$ 
+$ w(e_1) \leq w(e_2) $ $ \implies $ $(\exists e_1 = (u,v) \in E : u,v \in a) (\forall e_2 = (o, w) \in E : o \in a $  $\land$ $ w \notin a) w(e_2)\leq w(e_1) $ $\iff$ $a$ es una de las componentes conexas del bosque que mantiene el algoritmo de Kruskal para buscar un árbol generador máximo.
+\\
+\\
+Por lo tanto $a$ es candidata $ \implies $ $a$ es una de las componentes conexas del bosque que mantiene el algoritmo de Kruskal para buscar un árbol generador máximo. Debido a esto buscar únicamente en las componentes conexas del bosque que mantiene el algoritmo de Kruskal para buscar un árbol generador máximo es suficiente, pues por el contra recíproco si $a$ no es componente de Kruskal entonces $a$ no es candidata y por lo tanto no es necesario chequear en ese caso si $Mext(a) < mint(a)$. Además como $a$ es candidata $\iff$ $Mext(a) < mint(a)$ se encuentran exactamente todas las componentes candidatas chequeando esta condición para cada componente de Kruskal. Esto es precisamente lo que hace el algoritmo.
+
+
+
+
+\subsection{Complejidad}
+
+En primer lugar se puede observar en la bibliografía del trabajo que al comenzar Kruskal se deben ordenar de mayor a menor todas las aristas. Para ello se hace un algoritmo de ordenamiento de complejidad $O(mlog(m))$. Pero como $m es en peor caso n^2$ luego $O(mlog(m)) = O(mlog(n^2)) = O(2mlog(n)) = O(mlog(n))$. 
+
+
+
+Luego si bien es cierto que el ciclo externo que utiliza Kruskal itera sobre las aristas, el unite set se encuentra dentro de un if que hace que el mismo únicamente se ejecute en caso de que la arista no sea interna, es decir es una arista que une dos componentes disjuntas del árbol y por lo tanto es una arista del árbol generador mínimo. Por ende si bien el ciclo externo hace $m$ iteraciones, únicamente $n-1$ (la cantidad de aristas de un árbol) de esas iteraciones ejecutan la modificación del unite set. Luego respecto a esta modificación se puede observar que únicamente se agregan dos ciclos no anidados de $n$ iteraciones cada uno pero dentro de uno de ellos se llama a la función find set para cada iteración. Por lo tanto la complejidad de este ciclo es $n \alpha^{-1} $ y del ciclo completo de Kruskal es  $n^2 \alpha^{-1} $  Donde $\alpha$ es la función de Ackerman. Esta complejidad se justifica pues en el unite set siempre se prioriza la elección del parent por rango, donde el rango se corresponde con el tamaño de la componente en este caso. Y por bibliografía (Cormen, enunciado 24.1) dadas estas condiciones, el find set tiene la complejidad de la inversa de Ackerman.
+
+Por lo tanto la complejidad final del algoritmo es $O(mlog(n) + n^2 \alpha^{-1})$
+
+\section{Ejercicio 3: Camino mínimo}
+
+
+\subsection{Modelado}
+Para resolver este ejercicio se plantea en primer lugar modelar el problema con un grafo dirigido y pesado $G=(V,E,w)$ $/$ $|V|= p + 1 \land |E|= r $. En el mismo, un nodo ($s \in V$) representa al portero y los demás representan a cada uno de los feligreses. Las aristas representan las reglas recibidas por parámetro y el peso de las mismas equivale a la cantidad de monedas que pone el feligrés $u \in V $ en una arista $e \in E $  $/$ $ e = (u,v)$. De esta manera el nodo del portero se conecta a algunos nodos de feligreses con aristas de peso cero, pero las aristas entre feligreses tienen como peso a la cantidad de monedas que agrega a la lata el feligrés que la está pasando.
+
+\subsection{Algoritmo}
+En primer lugar se lee el input para modelar el grafo descripto previamente. Durante este proceso además se reservan en memoria los siguientes valores del input:
+
+\begin{itemize}
+    \item se guarda en memoria el conjunto $R$ de los nodos $v$ que pueden devolver la lata al portero. $O(r)$
+    \item se guarda en memoria la variable $c$ que representa la capacidad de la lata. $O(1)$
+\end{itemize}
+
+Una vez modelado el problema el algoritmo sobre el grafo es el siguiente:
+
+\begin{itemize}
+    \item Dijkstra(G,s) (Se buscan las mínimas distancias desde el portero a cualquier feligrés) $O(rlog(p))$
+    \item se busca $ z = min_{v \in R} \{i \in \mathbb{N} : i = d(s,v) + w( e = (v,s) )\}$ $O(p)$
+    \item se devuelve $(c-2) div (z-1)$. Donde $div$ es la división entera. $O(1)$
+\end{itemize}
+
+
+\subsection{Idea}
+
+Para poder maximizar la cantidad de monedas que es capaz de robar el portero es necesario encontrar el ciclo de menor valor que incluye al portero en el grafo modelado. Esto se debe a que el portero desea interceptar la lata cada ciertos intervalos lo más cortos posibles de modo que puedan haber muchas intercepciones hasta que se llenen las $c$ monedas de capacidad que tiene la lata. Viendo entonces que en un período total de $c$ monedas se quiere maximizar la cantidad de intercepciones, se debe por lo tanto maximizar la frecuencia con la que se intercepta la lata. Lo que es equivalente a minimizar el intervalo entre cada intercepción de modo de maximizar la cantidad de intervalos (y por lo tanto intercepciones) que caben dentro de las $c$ monedas a llenar.
+\\
+Una vez encontrado ese intervalo mínimo de longitud $z$, se devuelve cuantas veces cabe dentro de las $c$ monedas de capacidad de la lata por medio de una división entera.
+
+Respecto a la resta de 2 monedas a la capacidad $c$ se puede decir que es una peculiaridad del modelado elegido y de lo instantáneo de la acción de retirar la lata de circulación una vez alcanzada la capacidad máxima. Por ejemplo si $c=105$ y $z=7$, si bien es cierto que entran exactamente 15 "intervalos" de 7 monedas, no es cierto que el portero puede interceptar una décimo-quinta vez la lata. Esto se debe a que se llega a 105 monedas justo antes de que la reciba nuevamente el portero y por lo tanto instantáneamente pasa a manos del cura sin que el portero llegue a quitar una última moneda.
+
+\subsection{Demostración}
+
+\\
+Primero se quiere ver que encontrar el peso del mínimo ciclo que contiene al portero en el grafo modelado resuelve el problema. Como para cada intercepción de la lata el portero puede extraer una única moneda (por enunciado), la cantidad máxima de monedas que es capaz de extraer el portero equivale a la máxima cantidad de interceptaciones que el mismo es capaz de hacer (se define $t$ a esta cantidad a partir de ahora) . Para maximizar $t$, se debe minimizar la cantidad de monedas que se agregan a la lata antes de que vuelva a manos del portero (se define $z'$ a esta cantidad a partir de ahora). Esto se debe a que el único limitante para continuar pasando la lata y haciendo que vuelva al portero es que se alcance la capacidad $c$ de la lata. De este modo, si se eligiera cualquier otro camino (para pasar la lata) que no sea el que minimiza $z'$, luego $t' =$ la cantidad de veces que la lata vuelve al portero antes de alcanzar $c$ es menor o igual a $t$. Equivalentemente se puede pensar que se harán $t$ intercepciones y cada una llenará la lata por lo menos $z'$ monedas por lo que  $t.z' \leq c$ y por lo tanto minimizar $z'$, maximiza $t$ pues su producto se encuentra acotado por $c$.
+\\
+
+\\
+Más aún, cuando se hace una intercepción se quita una moneda por lo que $t(z'-1) \leq c$.
+Además debido a lo que se vió en la idea con respecto a la inmediatez del cura para recuperar la lata, si se llega a alcanzar $c$ antes de que vuelva al portero, esa última intercepción no se realiza por lo que (a nuetro problema respecta) se podría dejar de pasar la lata una vez que se alcanza $c-z'$ entonces $t(z'-1) \leq c-z'$ y como $z' \geq 2$ (por enunciado) entonces $t(z'-1) \leq c - 2$. Luego el problema resuelve encontrar $t = máx \{ i \in \mathbb{N} : t \leq \frac{c-2}{z'-1} \} $ 
+\\
+
+\\
+Se puede observar a partir del modelado que $z'$ se corresponde con el peso del mínimo ciclo que contiene al portero en el grafo y en el algoritmo se lo denomina $z$
+\\
+\\
+\\
+En segundo lugar se quiere ver que el algortimo efectivamente encuentra el peso del ciclo de peso mínimo que contiene al portero.
+
+Sea $G =(V,E,w)$ un grafo dirigido y pesado con $|V| = p + 1 \land |E| = r $ como se define en el modelado. Sea $s \in V$ el nodo que representa al portero. Sea $d : V x V \longrightarrow \mathbb{N} $  $/$ $d(u,v) $ es el peso de un camino mínimo de $u$ a $v$ en $G$ ($\forall u,v \in V$). Si no existiese camino de $u$ a $v$ $d(u,v) = \infty$.
+
+Como se corre Dijkstra(G,s) se encuentra $A = \{ d(s,v) : v \in V \} $ (Dijkstra es correcto y encuentra el camino mínimo de $s$ a todos los demás nodos del grafo pues fue visto en la teórica y se puede buscar en las referencias de la bibliografía de este trabajo). Luego, debido a que para todo ciclo que incluye a $s$ tambien se incluye algún nodo $v \in R$ (Donde $R$, definido en el algoritmo, es el conjunto de todos os nodos que tienen alguna arista que sale de ellos y llega a $s$). Luego $ z = min_{v \in R} \{i \in \mathbb{N} : i = d(s,v) + w( e = (v,s) )\}$ es el peso del mínimo ciclo, pues:
+
+\begin{itemize}
+    \item $z$ es el peso de un ciclo que resulta de tomar el camino mínimo de $s$ a un $v \in R$ y luego agregar una arista $e=(v,s)$
+    \item si no fuera mínimo debería existir $w \in R$ tal que $d(s,w) + w( e = (w,s) )  < z $ lo cual es absurdo por la definición de $z$.
+\end{itemize}
+ 
+
+
+
+
+\section{Ejercicio 4: Sistemas de restricciones de diferencias}
+
+
+\subsection{Idea general}
+
+
+
+
+\end{document}
