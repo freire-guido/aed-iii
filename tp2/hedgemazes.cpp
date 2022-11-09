@@ -47,8 +47,10 @@ int dp(int s) {
 
 int main() {
     while (cin >> r >> c >> q) {
+        if(r==0 && c==0 && q==0){
+            continue;
+        }
         for (int i = 0; i < r; ++i) {
-            ady[i].clear();
             parent[i] = -1;
         }
         for (int i = 0; i < c; ++i) {
@@ -64,5 +66,12 @@ int main() {
             cout << (raiz[s - 1] == raiz[t - 1] ? "Y" : "N") << endl;
         }
         cout << "-" << endl;
+        for (int i = 0; i < r; ++i) {
+            ady[i].clear();
+            ady1[i].clear();
+            tin[i] = -1;
+            raiz[i] =i ;
+            parent[i] = -1;
+        }
     }
 }
