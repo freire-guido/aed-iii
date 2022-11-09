@@ -23,12 +23,8 @@ bool fishburn() {
         cambio = false;
         for (Ecuacion& ec: ecs) {
             if (!satisface(ec)) {
-                int i = m - 1;
-                for (; i >= 0 && D[i] > D[x[ec.i]] + ec.Bij; --i);
-                if (i == -1) {
-                    return false;
-                }
-                x[ec.j] = i;
+                for (; x[ec.j] >= 0 && D[x[ec.j]] > D[x[ec.i]] + ec.Bij; x[ec.j]--);
+                if (x[ec.j] == -1) return false;
                 cambio = true;
             }
         }
