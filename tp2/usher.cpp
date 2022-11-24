@@ -1,10 +1,10 @@
 #include <bits/stdc++.h>
-#define INF 1e9;
+#define INF INT_MAX
 using namespace std;
 
 int c, p, q;
-vector<pair<int, int>> ady[501];
-vector<pair<int, int>> vuelven;
+map<int, int> ady[501];
+map<int, int> vuelven;
 int dist[501];
 
 int dijkstra() {
@@ -40,19 +40,16 @@ int main() {
         cin >> q;
         for (int i = 0; i < q; ++i) {
             int f; cin >> f;
-            ady[0].push_back({f, 0});
+            ady[0][f] = 0;
         }
         for (int u = 1; u <= p; ++u) {
             int r; cin >> r;
             for (int i = 0; i < r; ++i) {
-            //  (!) Puede ocurrir que dos reglas distintas
-            //      definan el pasaje de la caja hacia un mismo feligres.
-            //  (?) Me quedo siempre con la de minimo costo
                 int m, v; cin >> m >> v;
                 if (v == 0) {
-                    vuelven.push_back({u, m});
+                    vuelven[u] = min(vuelven.count(u) ? vuelven[u] : INF, m);
                 } else {
-                    ady[u].push_back({v, m});
+                    ady[u][v] = min(ady[u].count(v) ? ady[u][v] : INF, m);
                 }
             }
         }
